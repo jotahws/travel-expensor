@@ -2,7 +2,24 @@
 const imgAC = require('../assets/images/Profile_AC.jpg')
 const imgRJ = require('../assets/images/Profile_RJ.jpg')
 const imgJ = require('../assets/images/Profile_J.jpg')
+const imgC = require('../assets/images/Profile_C.jpg')
 
+// export const users = [
+//         {
+//             name: 'Jota',
+//             id: 'J',
+//             profilepic: imgJ,
+//             color: '#06618b',
+//             colorContrast: '#fff'
+//         },
+//         {
+//         name: 'Carlinha',
+//         id: 'C',
+//         profilepic: imgC,
+//         color: '#cc9800',
+//         colorContrast: '#fff'
+//         }
+// ]
 export const users = [
     {
         name: 'Ava & Corina',
@@ -23,6 +40,13 @@ export const users = [
         id: 'J',
         profilepic: imgJ,
         color: '#06618b',
+        colorContrast: '#fff'
+    },
+    {
+        name: 'Carlinha',
+        id: 'C',
+        profilepic: imgC,
+        color: '#cc9800',
         colorContrast: '#fff'
     }
 ]

@@ -36,12 +36,15 @@ export default function HistoryScreen() {
       <View style={styles.listItem}>
         <View style={styles.leftContainer}>
           <Image style={styles.image} source={item.user?.profilepic} />
-          <View style={styles.listItemTexts}>
-            <Text style={styles.amountText}>€ {item.amount}</Text>
-            <Text style={styles.userText}> ~R$ {item.convertedAmount}</Text>
+          <View style={styles.infoContainer}>
+            <View style={styles.amountsContainer}>
+              <Text style={styles.amountText}>€ {item.amount}</Text>
+              <Text style={styles.amountConvText}> ~R$ {item.convertedAmount} </Text>
+            </View>
+            <Text style={styles.mutedText}> {item.description} </Text>
           </View>
         </View>
-        <Text style={styles.userText}>{moment(item.date).calendar()}</Text>
+        <Text style={styles.mutedText}>{moment(item.date).calendar()}</Text>
       </View>
     </SwipableListItem>
   )
@@ -81,16 +84,17 @@ export default function HistoryScreen() {
   function useStyle() {
     return StyleSheet.create({
       container: {
-        flex: 1
+        flex: 1,
+        backgroundColor: Colors[colorScheme].background
       },
       list: {
         flex: 1
       },
       listItem: {
-        backgroundColor: '#fff',
+        backgroundColor: Colors[colorScheme].background,
         paddingHorizontal: 15,
         paddingVertical: 10,
-        borderBottomColor: "#eee",
+        borderBottomColor: Colors[colorScheme].mutedFade,
         borderBottomWidth: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -98,6 +102,7 @@ export default function HistoryScreen() {
       },
       leftContainer: {
         flexDirection: 'row',
+        alignItems: 'center'
       },
       btn: {
         padding: 5,
@@ -113,22 +118,33 @@ export default function HistoryScreen() {
         borderRadius: 100,
         marginRight: 15
       },
-      listItemTexts: {
-        justifyContent: 'center'
+      amountsContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row'
       },
       amountText: {
+        color: Colors[colorScheme].text,
         fontSize: 16,
-        marginBottom: 5,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
       },
-      userText: {
-        color: '#999'
+      amountConvText: {
+        marginLeft: 5,
+        color: '#999',
+      },
+      mutedText: {
+        color: '#999',
       },
       kpis: {
         flexDirection: 'row'
       },
       blankSpace: {
         marginLeft: 5
+      },
+      infoContainer: {
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        maxWidth: 200
       }
     });
   }

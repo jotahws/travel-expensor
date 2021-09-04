@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, StyleSheet, Text, TouchableOpacity, View, Alert } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import SwipableListItem from '../components/SwipableListItem';
 import NumPad from '../components/NumPad';
@@ -17,6 +17,7 @@ export default function NewExpenseScreen() {
   const [amount, setAmount] = React.useState('0.00');
   const alert = React.useRef();
   const styles = useStyle();
+  const [description, setDescription] = React.useState('');
 
   maskAmount = text => {
     var masked = text.replace(/\D/g, '')
@@ -36,11 +37,13 @@ export default function NewExpenseScreen() {
       "amount": amount,
       "txid": currDate.valueOf(),
       "isInvoice": true,
-      "date": currDate
+      "date": currDate,
+      "description": description
     }
     if (amount && amount !== '0.00') {
       addExpense(newExpense);
       setAmount('0.00')
+      setDescription('')
       alert.current.alertWithType('success', `€ ${amount}`, 'Adicionado!', undefined, 800);
     }
   }
@@ -57,6 +60,19 @@ export default function NewExpenseScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.amount}>{amount}</Text>
+      <View style={styles.descContainer}>
+        <Text style={styles.description}>{description}</Text>
+        {
+          !!description ?
+            <TouchableOpacity style={styles.descriptionBtn} onPress={() => setDescription('')} activeOpacity={.7}>
+              <Text style={styles.descriptionBtnText}>{"Remover descrição"}</Text>
+            </TouchableOpacity>
+            :
+            <TouchableOpacity style={styles.descriptionBtn} onPress={() => Alert.prompt('Descrição', 'Insira a descrição do gasto', text => setDescription(text))} activeOpacity={.7}>
+              <Text style={styles.descriptionBtnText}>{"Add descrição"}</Text>
+            </TouchableOpacity>
+        }
+      </View>
       <NumPad onType={number => maskAmount(amount + number)} onBackspace={removeLastNumber} onSend={handleAddExpense} />
       <DropdownAlert ref={alert} closeInterval={800} successImageSrc={require('../assets/images/check-mark.png')} />
     </View>
@@ -67,19 +83,31 @@ export default function NewExpenseScreen() {
       container: {
         flex: 1,
         justifyContent: 'center',
+        backgroundColor: Colors[colorScheme].background
       },
       amount: {
-        color: Colors.text,
+        color: Colors[colorScheme].text,
         fontSize: 70,
         textAlign: 'center',
       },
-      btn: {
+      descContainer: {
+        alignItems: 'center',
+      },
+      descriptionBtn: {
         backgroundColor: '#123456',
-        color: 'white',
-        padding: 15,
-        marginTop: 20,
-        textAlign: 'center',
-        marginHorizontal: 60,
+        paddingHorizontal: 15,
+        paddingVertical: 5,
+        borderRadius: 100
+      },
+      descriptionBtnText: {
+        color: "#fff",
+        fontSize: 16
+      },
+      description: {
+        color: Colors[colorScheme].text,
+        marginBottom: 10,
+        marginHorizontal: 30,
+        textAlign: 'center'
       }
     });
   }

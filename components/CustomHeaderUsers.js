@@ -9,6 +9,7 @@ import AuthContext from '../contexts/AuthContext';
 
 
 const CustomHeaderContent = (props) => {
+    const colorScheme = useColorScheme();
     const styles = useStyle();
     const [openUsers, setOpenUsers] = React.useState(false);
     const { signIn, user } = React.useContext(AuthContext)
@@ -37,6 +38,9 @@ const CustomHeaderContent = (props) => {
 
     function useStyle() {
         return StyleSheet.create({
+            container: {
+				backgroundColor: Colors[colorScheme].background
+            },
             emptySpace: {
                 width: 30
             },

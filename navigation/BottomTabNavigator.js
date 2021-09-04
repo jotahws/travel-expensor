@@ -8,6 +8,7 @@ import useColorScheme from '../hooks/useColorScheme';
 import ScanScreen from '../screens/ScanScreen';
 import NewExpenseScreen from '../screens/NewExpenseScreen';
 import HistoryScreen from '../screens/HistoryScreen';
+import SplitScreen from '../screens/SplitScreen';
 import CustomHeader from '../components/CustomHeader';
 import CustomHeaderUsers from '../components/CustomHeaderUsers';
 
@@ -39,6 +40,13 @@ export default function BottomTabNavigator() {
         component={HistoryNavigator}
         options={{
           tabBarIcon: ({ color }) => <TabBarIcon name="receipt-outline" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="Raxadinha"
+        component={SplitNavigator}
+        options={{
+          tabBarIcon: ({ color }) => <TabBarIcon name="swap-horizontal-outline" color={color} />,
         }}
       />
     </BottomTab.Navigator>
@@ -112,5 +120,27 @@ function HistoryNavigator() {
         }}
       />
     </HistoryStack.Navigator>
+  );
+}
+
+const SplitStack = createStackNavigator();
+
+function SplitNavigator() {
+  return (
+    <SplitStack.Navigator>
+      <SplitStack.Screen
+        name="SplitScreen"
+        component={SplitScreen}
+        options={{
+          title: 'Raxadinha',
+          header: ({ scene, previous, navigation }) => {
+            const { options } = scene.descriptor;
+            return (
+              <CustomHeader {...navigation} hasLeftButton={previous} title={options.title} />
+            );
+          }
+        }}
+      />
+    </SplitStack.Navigator>
   );
 }

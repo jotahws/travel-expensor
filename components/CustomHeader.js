@@ -7,8 +7,8 @@ import useColorScheme from '../hooks/useColorScheme';
 
 
 const CustomHeaderContent = (props) => {
-    const styles = useStyle();
     const colorScheme = useColorScheme();
+    const styles = useStyle();
 
     return (
         <SafeAreaView style={styles.container}>
@@ -22,6 +22,7 @@ const CustomHeaderContent = (props) => {
     function useStyle() {
         return StyleSheet.create({
             container: {
+				backgroundColor: Colors[colorScheme].background
             },
             header: {
                 padding: 13,

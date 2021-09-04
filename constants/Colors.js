@@ -11,16 +11,20 @@ export default {
     tintLight: tintLightColorLight,
     tabIconDefault: '#ccc',
     tabIconSelected: tintColorLight,
-    white: '#fff'
+    white: '#fff',
+    muted: '#eee',
+    mutedFade: '#eee'
   },
   dark: {
     text: '#fff',
-    background: '#000',
+    background: '#1b2428',
     tint: tintColorDark,
     tintLight: tintLightColorDark,
     tabIconDefault: '#ccc',
     tabIconSelected: tintColorDark,
-    white: '#fff'
+    white: '#fff',
+    muted: '#666',
+    mutedFade: '#444'
   },
 };
 
