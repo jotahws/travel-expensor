@@ -13,14 +13,7 @@ export const ExpenseProvider = ({ children }) => {
     const { convertCurrency } = React.useContext(CurrencyContext)
 
     useEffect(() => {
-        async function loadStorageData() {
-            let expenses = await AsyncStorage.getItem('@RNAuth:expenses');
-            if (expenses) {
-                setExpenseList(JSON.parse(expenses));
-            }
-            setLoading(false);
-        }
-        loadStorageData();
+        refreshExpenseList();
     }, []);
 
     const addExpense = async expense => {
@@ -45,8 +38,15 @@ export const ExpenseProvider = ({ children }) => {
         setExpenseList(newArray);
     }
 
+    const refreshExpenseList = async expense => {
+        let expenses = await AsyncStorage.getItem('@RNAuth:expenses');
+        if (expenses) {
+            setExpenseList(JSON.parse(expenses));
+        }
+    }
+
     return (
-        <ExpenseContext.Provider value={{ expenseList, addExpense, clearExpenses, removeExpense, loadingExpenses }}>
+        <ExpenseContext.Provider value={{ expenseList, addExpense, clearExpenses, removeExpense, loadingExpenses, refreshExpenseList }}>
             {children}
         </ExpenseContext.Provider>
     );

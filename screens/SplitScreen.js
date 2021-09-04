@@ -15,13 +15,20 @@ moment.locale('pt-br')
 
 export default function HistoryScreen() {
 	const colorScheme = useColorScheme();
-	const { expenseList } = React.useContext(ExpenseContext);
+	const { expenseList, refreshExpenseList } = React.useContext(ExpenseContext);
 	const styles = useStyle();
 	const [splitSteps, setSplitSteps] = React.useState([])
+	const [refreshingList, setRefreshingList] = React.useState(false)
 
 	React.useEffect(() => {
 		calcSplit()
 	}, [expenseList])
+
+	const refreshList = async () => {
+		setRefreshingList(true);
+		await refreshExpenseList();
+		setRefreshingList(false);
+	}
 
 	const calcSplit = () => {
 		let payers = []
@@ -94,14 +101,14 @@ export default function HistoryScreen() {
 	const renderSplitSteps = ({ item }) => (
 		<View style={[styles.stepContainer]}>
 			<View style={styles.stepItem}>
-				<Text style={[styles.stepItemText, {color: item.payer.color}]}>{item.payer.name}</Text>
+				<Text style={[styles.stepItemText, { color: item.payer.color }]}>{item.payer.name}</Text>
 			</View>
 			<View style={styles.stepMiddle}>
 				<Text style={styles.stepMiddleText}>€ {item.amount.toFixed(2)}</Text>
 				<Text style={styles.stepMiddleText}> <Ionicons size={30} name="arrow-forward-outline" color={Colors[colorScheme].text} /> </Text>
 			</View>
 			<View style={styles.stepItem}>
-				<Text style={[styles.stepItemText, {color: item.receiver.color}]}>{item.receiver.name}</Text>
+				<Text style={[styles.stepItemText, { color: item.receiver.color }]}>{item.receiver.name}</Text>
 			</View>
 		</View>
 	)
@@ -120,6 +127,8 @@ export default function HistoryScreen() {
 				renderItem={renderSplitSteps}
 				style={styles.list}
 				keyExtractor={(item, index) => index.toString()}
+				onRefresh={refreshList}
+				refreshing={refreshingList}
 			/>
 		</View>
 	);

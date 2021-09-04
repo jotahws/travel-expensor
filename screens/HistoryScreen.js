@@ -14,10 +14,11 @@ moment.locale('pt-br')
 
 export default function HistoryScreen() {
   const colorScheme = useColorScheme();
-  const { expenseList, clearExpenses, removeExpense } = React.useContext(ExpenseContext);
+  const { expenseList, clearExpenses, removeExpense, refreshExpenseList } = React.useContext(ExpenseContext);
   const styles = useStyle();
   const [selectedKpi, setSelectedKpi] = React.useState(null)
   const [filteredList, setFilteredList] = React.useState([])
+  const [refreshingList, setRefreshingList] = React.useState(false)
 
   React.useEffect(() => {
     setFilteredList(expenseList.sort((a, b) => a.date?.toString() < b.date?.toString()))
@@ -53,6 +54,12 @@ export default function HistoryScreen() {
     removeExpense(expense);
   }
 
+  const refreshList = async () => {
+    setRefreshingList(true);
+    await refreshExpenseList();
+    setRefreshingList(false);
+  }
+
   return (
     <View style={styles.container}>
       <View>
@@ -77,6 +84,8 @@ export default function HistoryScreen() {
         renderItem={renderExpense}
         style={styles.list}
         keyExtractor={(item, index) => index.toString()}
+        onRefresh={refreshList}
+        refreshing={refreshingList}
       />
     </View>
   );
