@@ -61,8 +61,12 @@ export default function ScanScreen() {
     })
     if (newExp && Object.keys(scannedExpense).length !== 0) {
       Vibration.vibrate(400);
-      addExpense(scannedExpense);
-      alert.current.alertWithType('success', `€ ${scannedExpense.amount}`, 'Adicionado!', undefined, 800);
+      const ok = addExpense(scannedExpense);
+      if (ok) {
+        alert.current.alertWithType('success', `€ ${amount}`, 'Adicionado!', undefined, 800);
+      } else {
+        alert.current.alertWithType('error', '', 'Erro ao adicionar!', undefined, 800);
+      }
     }
   };
 

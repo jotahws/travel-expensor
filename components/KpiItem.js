@@ -4,7 +4,6 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Colors from '../constants/Colors';
 import AuthContext from '../contexts/AuthContext';
 import useColorScheme from '../hooks/useColorScheme';
-import { users } from '../constants/Users'
 
 const KpiItem = props => {
     const colorScheme = useColorScheme();

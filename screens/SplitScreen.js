@@ -7,15 +7,16 @@ import Colors from '../constants/Colors';
 import { Image } from 'react-native';
 import moment from 'moment';
 import 'moment/locale/pt-br'
-import { users } from '../constants/Users'
 import { color, lessThan } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
+import AuthContext from '../contexts/AuthContext';
 
 moment.locale('pt-br')
 
 export default function HistoryScreen() {
 	const colorScheme = useColorScheme();
 	const { expenseList, refreshExpenseList } = React.useContext(ExpenseContext);
+	const { users } = React.useContext(AuthContext)
 	const styles = useStyle();
 	const [splitSteps, setSplitSteps] = React.useState([])
 	const [refreshingList, setRefreshingList] = React.useState(false)

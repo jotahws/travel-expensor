@@ -4,11 +4,11 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Colors from '../constants/Colors';
 import AuthContext from '../contexts/AuthContext';
 import useColorScheme from '../hooks/useColorScheme';
-import { users } from '../constants/Users'
 
 const PersonSelector = props => {
     const colorScheme = useColorScheme();
     const styles = useStyle();
+    const { users } = React.useContext(AuthContext)
     const { onItemSelected = () => { }, selected } = props
 
     return (
@@ -16,7 +16,7 @@ const PersonSelector = props => {
             {
                 users.map((e, i) => (
                     <TouchableOpacity key={i} style={[styles.item, (selected?.id === e.id ? styles.selected : null)]} onPress={() => onItemSelected(e)}>
-                        <Image style={styles.image} source={e.profilepic} />
+                        <Image style={styles.image} source={{ uri: e.profilepic }} />
                         <Text style={styles.itemText}>{e.name}</Text>
                     </TouchableOpacity>
                 ))

@@ -41,10 +41,14 @@ export default function NewExpenseScreen() {
       "description": description
     }
     if (amount && amount !== '0.00') {
-      addExpense(newExpense);
-      setAmount('0.00')
-      setDescription('')
-      alert.current.alertWithType('success', `€ ${amount}`, 'Adicionado!', undefined, 800);
+      const ok = addExpense(newExpense);
+      if (ok) {
+        setAmount('0.00')
+        setDescription('')
+        alert.current.alertWithType('success', `€ ${amount}`, 'Adicionado!', undefined, 800);
+      } else {
+        alert.current.alertWithType('error', '', 'Erro ao adicionar!', undefined, 800);
+      }
     }
   }
 

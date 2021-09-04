@@ -8,35 +8,39 @@ import Colors from '../constants/Colors';
 import { Image } from 'react-native';
 import moment from 'moment';
 import '../node_modules/moment/locale/pt-br'
-import { users } from '../constants/Users'
+import AuthContext from '../contexts/AuthContext';
 
 moment.locale('pt-br')
 
 export default function HistoryScreen() {
   const colorScheme = useColorScheme();
-  const { expenseList, clearExpenses, removeExpense, refreshExpenseList } = React.useContext(ExpenseContext);
+  const { expenseList, removeExpense, refreshExpenseList } = React.useContext(ExpenseContext);
+  const { users } = React.useContext(AuthContext)
   const styles = useStyle();
   const [selectedKpi, setSelectedKpi] = React.useState(null)
   const [filteredList, setFilteredList] = React.useState([])
   const [refreshingList, setRefreshingList] = React.useState(false)
 
   React.useEffect(() => {
-    setFilteredList(expenseList.sort((a, b) => a.date?.toString() < b.date?.toString()))
+    filterList()
   }, [expenseList])
 
   React.useEffect(() => {
+    filterList()
+  }, [selectedKpi])
+
+  const filterList = () => {
     if (selectedKpi)
       setFilteredList(expenseList.filter(e => e.user?.id === selectedKpi).sort((a, b) => a.date?.toString() < b.date?.toString()))
     else
       setFilteredList(expenseList.sort((a, b) => a.date?.toString() < b.date?.toString()))
-
-  }, [selectedKpi])
+  }
 
   const renderExpense = ({ item }) => (
     <SwipableListItem onDelete={() => deleteExpense(item)}>
       <View style={styles.listItem}>
         <View style={styles.leftContainer}>
-          <Image style={styles.image} source={item.user?.profilepic} />
+          <Image style={styles.image} source={{ uri: item.user?.profilepic }} />
           <View style={styles.infoContainer}>
             <View style={styles.amountsContainer}>
               <Text style={styles.amountText}>€ {item.amount}</Text>

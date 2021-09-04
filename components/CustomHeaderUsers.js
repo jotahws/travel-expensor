@@ -23,7 +23,7 @@ const CustomHeaderContent = (props) => {
         <SafeAreaView style={styles.container}>
             <TouchableOpacity style={styles.changeUserContainer} onPress={() => setOpenUsers(true)} activeOpacity={.7}>
                 <View style={styles.userContainer}>
-                    <Image style={styles.image} source={user?.profilepic}/>
+                    <Image style={styles.image} source={{ uri: user?.profilepic }} />
                     <Text style={styles.changeUserText}>{user?.name}</Text>
                 </View>
                 <View style={styles.changeUserBtn}>
@@ -31,7 +31,7 @@ const CustomHeaderContent = (props) => {
                 </View>
             </TouchableOpacity>
             <BottomSheet open={openUsers} changeStateCallback={isOpen => setOpenUsers(isOpen)} height={400} >
-                <PersonSelector onItemSelected={handleUserSelection} selected={user}/>
+                <PersonSelector onItemSelected={handleUserSelection} selected={user} />
             </BottomSheet>
         </SafeAreaView>
     );
@@ -39,7 +39,7 @@ const CustomHeaderContent = (props) => {
     function useStyle() {
         return StyleSheet.create({
             container: {
-				backgroundColor: Colors[colorScheme].background
+                backgroundColor: Colors[colorScheme].background
             },
             emptySpace: {
                 width: 30
