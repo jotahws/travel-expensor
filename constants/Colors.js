@@ -12,8 +12,9 @@ export default {
     tabIconDefault: '#ccc',
     tabIconSelected: tintColorLight,
     white: '#fff',
-    muted: '#eee',
-    mutedFade: '#eee'
+    muted: '#ccc',
+    mutedFade: '#eee',
+    success: '#87ca9d'
   },
   dark: {
     text: '#fff',
@@ -24,7 +25,8 @@ export default {
     tabIconSelected: tintColorDark,
     white: '#fff',
     muted: '#666',
-    mutedFade: '#444'
+    mutedFade: '#444',
+    success: '#87ca9d'
   },
 };
 

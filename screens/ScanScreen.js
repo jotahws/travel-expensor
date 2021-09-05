@@ -63,7 +63,7 @@ export default function ScanScreen() {
       Vibration.vibrate(400);
       const ok = addExpense(scannedExpense);
       if (ok) {
-        alert.current.alertWithType('success', `€ ${amount}`, 'Adicionado!', undefined, 800);
+        alert.current.alertWithType('success', `€ ${scannedExpense.amount}`, 'Adicionado!', undefined, 800);
       } else {
         alert.current.alertWithType('error', '', 'Erro ao adicionar!', undefined, 800);
       }

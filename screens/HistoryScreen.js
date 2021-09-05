@@ -41,6 +41,13 @@ export default function HistoryScreen() {
       <View style={styles.listItem}>
         <View style={styles.leftContainer}>
           <Image style={styles.image} source={{ uri: item.user?.profilepic }} />
+          <View style={styles.splitersContainer}>
+            {
+              item.spliters.map((s, i) => (
+                <Image key={i} style={styles.imageSpliter} source={{ uri: s.profilepic }} />
+              ))
+            }
+          </View>
           <View style={styles.infoContainer}>
             <View style={styles.amountsContainer}>
               <Text style={styles.amountText}>€ {item.amount}</Text>
@@ -126,8 +133,8 @@ export default function HistoryScreen() {
         color: 'white'
       },
       image: {
-        height: 45,
-        width: 45,
+        height: 50,
+        width: 50,
         borderRadius: 100,
         marginRight: 15
       },
@@ -158,6 +165,22 @@ export default function HistoryScreen() {
         justifyContent: 'center',
         alignItems: 'flex-start',
         maxWidth: 200
+      },
+      splitersContainer: {
+        flexDirection: 'row',
+        position: 'absolute',
+        bottom: -5,
+        left: 10
+      },
+      imageSpliter: {
+        height: 20,
+        width: 20,
+        borderRadius: 100,
+        marginLeft: -10,
+        borderWidth: 2,
+        borderColor: Colors[colorScheme].background,
+        backgroundColor: Colors[colorScheme].background,
+        overflow: 'hidden'
       }
     });
   }

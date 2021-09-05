@@ -6,7 +6,8 @@ import { Alert } from 'react-native';
 const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
-    const [loggedUser, setLoggedUser] = useState(null);
+    const [payer, setPayer] = useState(null);
+    const [spliters, setSpliters] = useState([]);
     const [loading, setLoading] = useState(true);
     const [userList, setUserList] = useState([]);
 
@@ -14,25 +15,23 @@ export const AuthProvider = ({ children }) => {
         getUsers();
         async function loadStorageData() {
             const user = await AsyncStorage.getItem('@RNAuth:user');
-            setLoggedUser(JSON.parse(user));
+            setPayer(JSON.parse(user));
             setLoading(false);
         }
         loadStorageData();
     }, []);
 
-    //Chama API de Login
-    async function signIn(user) {
+    async function selectPayer(user) {
         setLoading(true);
         console.log(` ${JSON.stringify(user)}`);
         await AsyncStorage.setItem('@RNAuth:user', JSON.stringify(user));
-        setLoggedUser(user)
+        setPayer(user)
         setLoading(false);
     }
 
-    //Chama a API de logout e remove os dados do storage
     function signOut() {
         AsyncStorage.clear().then(() => {
-            setLoggedUser(null);
+            setPayer(null);
         });
     }
 
@@ -50,7 +49,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     return (
-        <AuthContext.Provider value={{ user: loggedUser, signIn, signOut, loading, users: userList }}>
+        <AuthContext.Provider value={{ user: payer, spliters, setSpliters, setPayer: selectPayer, signOut, loading, users: userList }}>
             {children}
         </AuthContext.Provider>
     );

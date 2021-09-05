@@ -10,7 +10,7 @@ const ExpenseContext = createContext({});
 export const ExpenseProvider = ({ children }) => {
     const [loadingExpenses, setLoading] = useState(true);
     const [expenseList, setExpenseList] = useState([]);
-    const { user } = React.useContext(AuthContext)
+    const { user, spliters } = React.useContext(AuthContext)
     const { convertCurrency } = React.useContext(CurrencyContext)
 
     useEffect(() => {
@@ -19,6 +19,7 @@ export const ExpenseProvider = ({ children }) => {
 
     const addExpense = async expense => {
         expense.user = user;
+        expense.spliters = spliters;
         expense.convertedAmount = convertCurrency(expense.amount);
         const response = await fetch(expensesAPI,
             {
@@ -40,12 +41,9 @@ export const ExpenseProvider = ({ children }) => {
             if(!response.ok) throw Error(response.statusText)
             setExpenseList(newArray);
         } catch (error) {
-            Alert.alert("Erro", error.toString(),
-                [{ text: "Tentar novamente", onPress: refreshExpenseList }]
-            );
+            Alert.alert("Erro", error.toString());
             console.error(error);
         }
-
     }
 
     const refreshExpenseList = async expense => {
