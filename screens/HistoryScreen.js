@@ -9,14 +9,16 @@ import { Image } from 'react-native';
 import moment from 'moment';
 import '../node_modules/moment/locale/pt-br'
 import AuthContext from '../contexts/AuthContext';
+import BottomSheet from '../components/BottomSheet'
 
 moment.locale('pt-br')
 
-export default function HistoryScreen() {
+const HistoryScreen = ({ navigation }) => {
   const colorScheme = useColorScheme();
   const { expenseList, removeExpense, refreshExpenseList } = React.useContext(ExpenseContext);
   const { users } = React.useContext(AuthContext)
   const styles = useStyle();
+  const [openDetail, setOpenDetail] = React.useState(null)
   const [selectedKpi, setSelectedKpi] = React.useState(null)
   const [filteredList, setFilteredList] = React.useState([])
   const [refreshingList, setRefreshingList] = React.useState(false)
@@ -38,28 +40,41 @@ export default function HistoryScreen() {
 
   const renderExpense = ({ item }) => (
     <SwipableListItem onDelete={() => deleteExpense(item)}>
-      <View style={styles.listItem}>
+      <TouchableOpacity style={styles.listItem} activeOpacity={0.7} onPress={() => navigation.navigate('ExpenseDetail', { ...item })}>
         <View style={styles.leftContainer}>
           <Image style={styles.image} source={{ uri: item.user?.profilepic }} />
           <View style={styles.splitersContainer}>
             {
               item.spliters.map((s, i) => (
-                <Image key={i} style={styles.imageSpliter} source={{ uri: s.profilepic }} />
+                <Image key={i} style={[styles.imageSpliter, { backgroundColor: s.color }]} source={{ uri: s.profilepic }} />
               ))
             }
           </View>
           <View style={styles.infoContainer}>
             <View style={styles.amountsContainer}>
-              <Text style={styles.amountText}>€ {item.amount}</Text>
-              <Text style={styles.amountConvText}> ~R$ {item.convertedAmount} </Text>
+              <Text style={styles.amountText}>€ {item.amount.toFixed(2)}</Text>
+              <Text style={styles.amountConvText}> ~R$ {item.convertedAmount.toFixed(2)} </Text>
             </View>
             <Text style={styles.mutedText}> {item.description} </Text>
           </View>
         </View>
         <Text style={styles.mutedText}>{moment(item.date).calendar()}</Text>
-      </View>
+      </TouchableOpacity>
     </SwipableListItem>
   )
+
+  const renderUserKpi = (e, i) => {
+    const amountLocal = expenseList.filter((exp) => { return exp.user.id === e.id }).map(el => { return el.amount }).reduce((a, b) => (+a + +b).toFixed(2), 0)
+    const amountConverted = expenseList.filter((exp) => { return exp.user.id === e.id }).map(el => { return el.convertedAmount }).reduce((a, b) => (+a + +b).toFixed(2), 0)
+    if (amountLocal)
+      return (
+        <KpiItem title={e.name} color={e.color} colorContrast={e.colorContrast} key={i} selected={selectedKpi === e.id} onPress={() => setSelectedKpi(e.id)}
+          value1={`€ ${amountLocal}`}
+          value2={`R$ ${amountConverted}`} />
+      )
+    return
+  }
+
 
   const deleteExpense = (expense) => {
     removeExpense(expense);
@@ -81,11 +96,7 @@ export default function HistoryScreen() {
             value2={`R$ ${expenseList.map(el => { return el.convertedAmount }).reduce((a, b) => (+a + +b).toFixed(2), 0)}`}
           />
           {
-            users.map((e, i) => (
-              <KpiItem title={e.name} color={e.color} colorContrast={e.colorContrast} key={i} selected={selectedKpi === e.id} onPress={() => setSelectedKpi(e.id)}
-                value1={`€ ${expenseList.filter((exp) => { return exp.user.id === e.id }).map(el => { return el.amount }).reduce((a, b) => (+a + +b).toFixed(2), 0)}`}
-                value2={`R$ ${expenseList.filter((exp) => { return exp.user.id === e.id }).map(el => { return el.convertedAmount }).reduce((a, b) => (+a + +b).toFixed(2), 0)}`} />
-            ))
+            users.map(renderUserKpi)
           }
           <View style={styles.blankSpace} />
         </ScrollView>
@@ -98,6 +109,11 @@ export default function HistoryScreen() {
         onRefresh={refreshList}
         refreshing={refreshingList}
       />
+      <BottomSheet open={openDetail} changeStateCallback={isOpen => setOpenDetail(isOpen)} height={700} >
+        <TouchableOpacity style={styles.btnOkContainer} onPress={() => { setOpenDetail(false) }}>
+          <Text style={styles.btnOk}>OK</Text>
+        </TouchableOpacity>
+      </BottomSheet>
     </View>
   );
 
@@ -185,3 +201,5 @@ export default function HistoryScreen() {
     });
   }
 }
+
+export default HistoryScreen;

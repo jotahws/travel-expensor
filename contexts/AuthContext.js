@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }) => {
             setUserList(json);
         } catch (error) {
             Alert.alert("Erro", error.toString(),
-                [{ text: "Tentar novamente", onPress: refreshExpenseList }]
+                [{ text: "Tentar novamente", onPress: getUsers }]
             );
             console.error(error);
         }

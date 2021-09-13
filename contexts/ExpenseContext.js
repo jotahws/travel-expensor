@@ -28,7 +28,7 @@ export const ExpenseProvider = ({ children }) => {
                 body: JSON.stringify(expense)
             });
         if (response.ok)
-            setExpenseList([...expenseList, expense]);
+            refreshExpenseList();
         return response.ok;
     }
 
@@ -38,8 +38,28 @@ export const ExpenseProvider = ({ children }) => {
         });
         try {
             const response = await fetch(`${expensesAPI}/${expense._id}`, { method: 'DELETE' });
-            if(!response.ok) throw Error(response.statusText)
+            if (!response.ok) throw Error(response.statusText)
             setExpenseList(newArray);
+        } catch (error) {
+            Alert.alert("Erro", error.toString());
+            console.error(error);
+        }
+    }
+
+    const updateExpense = async expense => {
+        console.log(expense);
+        try {
+            await setTimeout(() => {
+            }, 1000);
+            const response = await fetch(`${expensesAPI}/${expense._id}`,
+                {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(expense)
+                });
+            if (!response.ok) throw Error(response.statusText)
+            refreshExpenseList();
+            return true;
         } catch (error) {
             Alert.alert("Erro", error.toString());
             console.error(error);
@@ -60,7 +80,7 @@ export const ExpenseProvider = ({ children }) => {
     }
 
     return (
-        <ExpenseContext.Provider value={{ expenseList, addExpense, removeExpense, loadingExpenses, refreshExpenseList }}>
+        <ExpenseContext.Provider value={{ expenseList, addExpense, removeExpense, loadingExpenses, refreshExpenseList, updateExpense }}>
             {children}
         </ExpenseContext.Provider>
     );

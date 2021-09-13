@@ -12,6 +12,12 @@ const CustomHeaderContent = (props) => {
 
     return (
         <SafeAreaView style={styles.container}>
+            {
+                props.hasLeftButton&&
+                <TouchableOpacity onPress={props.pop} style={styles.backbtn}>
+                    <Ionicons name="ios-arrow-back" size={30} color={Colors[colorScheme].tint} />
+                </TouchableOpacity>
+            }
             <View style={styles.header}>
                 <Text style={styles.title}>{props.title}</Text>
                 <View style={styles.emptySpace} />
@@ -22,7 +28,9 @@ const CustomHeaderContent = (props) => {
     function useStyle() {
         return StyleSheet.create({
             container: {
-				backgroundColor: Colors[colorScheme].background
+                flexDirection: 'row',
+				backgroundColor: Colors[colorScheme].background,
+                alignItems: 'center',
             },
             header: {
                 padding: 13,
@@ -32,12 +40,15 @@ const CustomHeaderContent = (props) => {
             },
             title: {
                 fontSize: 18,
-                color: '#CA9D87',
+                color: Colors[colorScheme].tint,
                 fontWeight: '600',
                 fontSize: 22
              },
             emptySpace: {
                 width: 30
+            },
+            backbtn: {
+                paddingLeft: 20,
             }
         });
     }

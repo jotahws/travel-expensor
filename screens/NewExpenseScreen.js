@@ -77,7 +77,7 @@ export default function NewExpenseScreen() {
             </TouchableOpacity>
         }
       </View>
-      <NumPad onType={number => maskAmount(amount + number)} onBackspace={removeLastNumber} onSend={handleAddExpense} />
+      <NumPad onType={number => maskAmount(amount + number)} onBackspace={() => {setAmount('0.00')}} onSend={handleAddExpense} />
       <DropdownAlert ref={alert} closeInterval={800} successImageSrc={require('../assets/images/check-mark.png')} />
     </View>
   );

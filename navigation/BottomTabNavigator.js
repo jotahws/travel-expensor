@@ -8,6 +8,7 @@ import useColorScheme from '../hooks/useColorScheme';
 import ScanScreen from '../screens/ScanScreen';
 import NewExpenseScreen from '../screens/NewExpenseScreen';
 import HistoryScreen from '../screens/HistoryScreen';
+import ExpenseDetailScreen from '../screens/ExpenseDetailScreen';
 import SplitScreen from '../screens/SplitScreen';
 import CustomHeader from '../components/CustomHeader';
 import CustomHeaderUsers from '../components/CustomHeaderUsers';
@@ -111,6 +112,19 @@ function HistoryNavigator() {
         component={HistoryScreen}
         options={{
           title: 'Histórico',
+          header: ({ scene, previous, navigation }) => {
+            const { options } = scene.descriptor;
+            return (
+              <CustomHeader {...navigation} hasLeftButton={previous} title={options.title} />
+            );
+          }
+        }}
+      />
+      <HistoryStack.Screen
+        name="ExpenseDetail"
+        component={ExpenseDetailScreen}
+        options={{
+          title: 'Detalhe do Gasto',
           header: ({ scene, previous, navigation }) => {
             const { options } = scene.descriptor;
             return (

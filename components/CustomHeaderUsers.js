@@ -6,6 +6,7 @@ import BottomSheet from './BottomSheet';
 import useColorScheme from '../hooks/useColorScheme';
 import PersonSelector from '../components/PersonSelector';
 import AuthContext from '../contexts/AuthContext';
+import { ScrollView } from 'react-native-gesture-handler';
 
 
 const CustomHeaderContent = (props) => {
@@ -28,7 +29,7 @@ const CustomHeaderContent = (props) => {
 
     return (
         <>
-            <SafeAreaView style={{ backgroundColor: Colors[colorScheme].muted }} />
+            <SafeAreaView style={{ backgroundColor: Colors[colorScheme].tintLight }} />
             <SafeAreaView style={styles.container}>
                 <TouchableOpacity style={styles.changeUserContainer} onPress={() => setOpenUsers(true)} activeOpacity={.7}>
                     <View style={styles.section1}>
@@ -41,7 +42,7 @@ const CustomHeaderContent = (props) => {
                             <Text style={styles.label}>Dividindo com {!spliters.length && "ninguém"}</Text>
                             {
                                 spliters.map((e, i) => (
-                                    <Image key={i} style={styles.spliterImage} source={{ uri: e.profilepic }} />
+                                    <Image key={i} style={[styles.spliterImage, { borderColor: e.color }]} source={{ uri: e.profilepic }} />
                                 ))
                             }
                         </View>
@@ -51,10 +52,12 @@ const CustomHeaderContent = (props) => {
                     </View>
                 </TouchableOpacity>
                 <BottomSheet open={openUsers} changeStateCallback={isOpen => setOpenUsers(isOpen)} full >
-                    <PersonSelector onPayerSelected={handleUserSelection} onSpliterSelected={handleSpliterSelection} selected={user} />
-                    <TouchableOpacity style={styles.btnOkContainer} onPress={() => { setOpenUsers(false) }}>
-                        <Text style={styles.btnOk}>OK</Text>
-                    </TouchableOpacity>
+                    <ScrollView>
+                        <PersonSelector onPayerSelected={handleUserSelection} onSpliterSelected={handleSpliterSelection} selected={user} />
+                        <TouchableOpacity style={styles.btnOkContainer} onPress={() => { setOpenUsers(false) }}>
+                            <Text style={styles.btnOk}>OK</Text>
+                        </TouchableOpacity>
+                    </ScrollView>
                 </BottomSheet>
             </SafeAreaView>
         </>
@@ -73,7 +76,7 @@ const CustomHeaderContent = (props) => {
                 paddingVertical: 15,
                 paddingHorizontal: 20,
                 justifyContent: 'space-between',
-                backgroundColor: Colors[colorScheme].muted,
+                backgroundColor: Colors[colorScheme].tintLight,
                 borderBottomLeftRadius: 15,
                 borderBottomRightRadius: 15,
                 alignItems: 'center'
@@ -114,7 +117,8 @@ const CustomHeaderContent = (props) => {
                 height: 23,
                 width: 23,
                 borderRadius: 100,
-                marginRight: 5
+                marginRight: 5,
+                borderWidth: 2
             },
             hr: {
                 marginVertical: 10,

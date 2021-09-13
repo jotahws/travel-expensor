@@ -1,6 +1,7 @@
 import React from 'react';
 import { Image } from 'react-native';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import Colors from '../constants/Colors';
 import AuthContext from '../contexts/AuthContext';
 import useColorScheme from '../hooks/useColorScheme';
@@ -43,17 +44,33 @@ const PersonSelector = props => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.label}>Quem é o pagador?</Text>
-            {
-                users.map((e, i) => (
-                    <TouchableOpacity key={i} style={[styles.item, (selected?.id === e.id ? styles.selected : null)]} onPress={() => selectPayer(e)}>
-                        <Image style={styles.image} source={{ uri: e.profilepic }} />
-                        <Text style={styles.itemText}>{e.name}</Text>
-                    </TouchableOpacity>
-                ))
-            }
+            <Text style={styles.label}>Pagador</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.userList}>
+                {
+                    users.map((e, i) => (
+                        <TouchableOpacity key={i} style={[styles.userItem, (selected?.id === e.id ? styles.selected : null)]} onPress={() => selectPayer(e)}>
+                            <Image style={styles.userImage} source={{ uri: e.profilepic }} />
+                            <Text style={styles.userName}>{e.name}</Text>
+                        </TouchableOpacity>
+                    ))
+                }
+            </ScrollView>
             <View style={styles.hr} />
-            <Text style={styles.label}>Com quem está sendo dividida essa despesa?</Text>
+            <Text style={styles.label}>Dividir com</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.userList}>
+                {
+                    users.map((e, i) => (
+                        <View key={i}>
+                            {selected?.id !== e.id &&
+                                <TouchableOpacity style={[styles.userItem, (isSpliter(e.id) ? styles.selected : null)]} onPress={() => toggleSpliter(e)}>
+                                    <Image style={styles.userImage} source={{ uri: e.profilepic }} />
+                                    <Text style={styles.userName}>{e.name}</Text>
+                                </TouchableOpacity>
+                            }
+                        </View>
+                    ))
+                }
+            </ScrollView>
             <View style={styles.allBtnContainer}>
                 <TouchableOpacity style={[styles.allBtn]} onPress={() => addAllSpliters()}>
                     <Text style={styles.itemText}>Selecionar Todos</Text>
@@ -62,18 +79,6 @@ const PersonSelector = props => {
                     <Text style={styles.itemText}>Remover Todos</Text>
                 </TouchableOpacity>
             </View>
-            {
-                users.map((e, i) => (
-                    <View key={i}>
-                        {selected?.id !== e.id &&
-                            <TouchableOpacity style={[styles.item, (isSpliter(e.id) ? styles.selected : null)]} onPress={() => toggleSpliter(e)}>
-                                <Image style={styles.image} source={{ uri: e.profilepic }} />
-                                <Text style={styles.itemText}>{e.name}</Text>
-                            </TouchableOpacity>
-                        }
-                    </View>
-                ))
-            }
         </View >
     );
 
@@ -81,12 +86,13 @@ const PersonSelector = props => {
         return StyleSheet.create({
             container: {
                 marginTop: 10,
+                paddingHorizontal: 15,
             },
             label: {
-                fontSize: 16,
-                color: Colors[colorScheme].text,
-                paddingBottom: 10,
-                paddingHorizontal: 10,
+                fontSize: 18,
+                fontWeight: 'bold',
+                marginBottom: 10,
+                color: Colors[colorScheme].text
             },
             hr: {
                 marginHorizontal: 10,
@@ -95,28 +101,7 @@ const PersonSelector = props => {
                 borderBottomColor: Colors[colorScheme].mutedFade
             },
             selected: {
-                backgroundColor: Colors[colorScheme].tint,
-            },
-            item: {
-                flexDirection: 'row',
-                alignItems: 'center',
-                backgroundColor: Colors[colorScheme].mutedFade,
-                // margin: 5,
-                padding: 10,
-                // borderRadius: 10,
-                borderColor: Colors[colorScheme].muted,
-                borderWidth: 0.5
-            },
-            itemText: {
-                textAlign: 'center',
-                color: Colors[colorScheme].text,
-                fontSize: 18,
-            },
-            image: {
-                height: 30,
-                width: 30,
-                borderRadius: 100,
-                marginRight: 10,
+                backgroundColor: Colors[colorScheme].tintLight,
             },
             allBtnContainer: {
                 flexDirection: 'row',
@@ -124,11 +109,41 @@ const PersonSelector = props => {
             },
             allBtn: {
                 flex: 1,
-                backgroundColor: Colors[colorScheme].muted,
                 margin: 5,
                 padding: 7,
                 borderRadius: 10,
-            }
+            },
+            itemText: {
+                fontSize: 16,
+                color: Colors[colorScheme].muted,
+                textAlign: 'center',
+            },
+            userList: {
+                flexDirection: 'row',
+                marginHorizontal: -15,
+                paddingHorizontal: 15,
+            },
+            userItem: {
+                marginRight: 5,
+                marginBottom: 10,
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 10,
+                padding: 5,
+            },
+            userImage: {
+                width: 50,
+                height: 50,
+                borderRadius: 25,
+                backgroundColor: Colors[colorScheme].muted,
+                borderWidth: 2,
+                borderColor: Colors[colorScheme].background
+            },
+            userName: {
+                fontSize: 12,
+                color: Colors[colorScheme].text,
+                marginTop: 5
+            },
         });
     }
 }
