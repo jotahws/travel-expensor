@@ -10,6 +10,7 @@ import 'moment/locale/pt-br'
 import { color, lessThan } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 import AuthContext from '../contexts/AuthContext';
+import BottomSheet from '../components/BottomSheet';
 
 moment.locale('pt-br')
 
@@ -28,6 +29,7 @@ const DetailScreen = ({ route, navigation }) => {
     const [inputAmount, setInputAmount] = useState(amount.toFixed(2))
     const [inputDescription, setInputDescription] = useState(description)
     const [updating, setUpdating] = useState(false)
+    const [openVarAmount, setOpenVarAmount] = useState(false)
 
     useEffect(() => {
         setSpliterList(users.filter(u => u.id !== user.id))
@@ -75,7 +77,7 @@ const DetailScreen = ({ route, navigation }) => {
         <>
             <ScrollView style={styles.container}>
                 <Text style={styles.info}>{moment(date).format('DD/MM/YYYY')}</Text>
-                <Text style={styles.label}>Pagador</Text>
+                <Text style={styles.label}>Pago por</Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.userList}>
                     {
                         users.map((e, i) => (
@@ -88,8 +90,8 @@ const DetailScreen = ({ route, navigation }) => {
                 </ScrollView>
                 <Text style={styles.label}>Montante</Text>
                 <TextInput style={styles.input} placeholder="Montante" onChangeText={maskAmount} value={inputAmount} keyboardType={'decimal-pad'} />
-                    <Text style={styles.label}>Descrição </Text>
-                    <TextInput style={styles.input} placeholder="Descrição" onChangeText={setInputDescription} value={inputDescription} />
+                <Text style={styles.label}>Descrição </Text>
+                <TextInput style={styles.input} placeholder="Descrição" onChangeText={setInputDescription} value={inputDescription} />
                 <Text style={styles.label}>A dividir a despesa com</Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.userList}>
                     {
@@ -103,6 +105,9 @@ const DetailScreen = ({ route, navigation }) => {
                         ))
                     }
                 </ScrollView>
+                {/* <TouchableOpacity style={styles.buttonSecondary} onPress={() => setOpenVarAmount(true)}>
+                    <Text style={styles.buttonTextSecondary}>Usar valores específicos</Text>
+                </TouchableOpacity> */}
             </ScrollView>
             <TouchableOpacity style={styles.button} onPress={handleSave}>
                 {
@@ -112,6 +117,30 @@ const DetailScreen = ({ route, navigation }) => {
                         <Text style={styles.buttonText}>Salvar</Text>
                 }
             </TouchableOpacity>
+            <BottomSheet open={openVarAmount} changeStateCallback={isOpen => setOpenVarAmount(isOpen)} full >
+                <ScrollView>
+                    {
+                        spliters.map((e, i) => (
+                            <View key={i} style={styles.varAmountItem}>
+                                <View>
+                                    <Image style={styles.userImage} source={{ uri: e.profilepic }} />
+                                    <Text style={styles.userName}>{e.name}</Text>
+                                </View>
+                                <TouchableOpacity style={styles.btnCircle} onPress={() => {}}>
+                                    <Text style={styles.btnCircleText}>+</Text>
+                                </TouchableOpacity>
+                                <Text style={styles.userName}>{e.name}</Text>
+                                <TouchableOpacity style={styles.btnCircle} onPress={() => {}}>
+                                    <Text style={styles.btnCircleText}>-</Text>
+                                </TouchableOpacity>
+                            </View>
+                        ))
+                    }
+                    <TouchableOpacity style={styles.buttonSecondary} onPress={() => { setOpenVarAmount(false) }}>
+                        <Text style={styles.buttonTextSecondary}>OK</Text>
+                    </TouchableOpacity>
+                </ScrollView>
+            </BottomSheet>
         </>
     );
 
@@ -155,6 +184,18 @@ const DetailScreen = ({ route, navigation }) => {
                 color: Colors[colorScheme].background,
                 fontSize: 20,
             },
+            buttonSecondary: {
+                backgroundColor: Colors[colorScheme].mutedFade,
+                padding: 10,
+                marginBottom: 20,
+                borderRadius: 10,
+                alignItems: 'center',
+                justifyContent: 'center'
+            },
+            buttonTextSecondary: {
+                color: Colors[colorScheme].text,
+                fontSize: 16,
+            },
             info: {
                 fontSize: 16,
                 color: Colors[colorScheme].tint,
@@ -189,8 +230,11 @@ const DetailScreen = ({ route, navigation }) => {
             },
             selectedItem: {
                 backgroundColor: Colors[colorScheme].tintLight
+            },
+            varAmountItem: {
+                flexDirection: 'row',
+                marginHorizontal: 15,
             }
-
         });
     }
 }

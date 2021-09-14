@@ -47,7 +47,7 @@ export const ExpenseProvider = ({ children }) => {
     }
 
     const updateExpense = async expense => {
-        console.log(expense);
+        expense.convertedAmount = convertCurrency(expense.amount);
         try {
             await setTimeout(() => {
             }, 1000);
