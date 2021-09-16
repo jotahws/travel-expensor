@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FlatList, StyleSheet, Text, TouchableOpacity, View, Alert } from 'react-native';
+import { FlatList, StyleSheet, Text, TouchableOpacity, View, Alert, Modal } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import SwipableListItem from '../components/SwipableListItem';
 import NumPad from '../components/NumPad';
@@ -18,6 +18,8 @@ export default function NewExpenseScreen() {
   const alert = React.useRef();
   const styles = useStyle();
   const [description, setDescription] = React.useState('');
+  const [descriptionModal, setDescriptionModal] = React.useState('');
+  const [openDescription, setOpenDescription] = React.useState(false);
 
   maskAmount = text => {
     var masked = text.replace(/\D/g, '')
@@ -61,6 +63,11 @@ export default function NewExpenseScreen() {
     }
   }
 
+  const handleModalConfirm = () => {
+    setDescription(descriptionModal);
+    setOpenDescription(false)
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.amount}>{amount}</Text>
@@ -72,13 +79,25 @@ export default function NewExpenseScreen() {
               <Text style={styles.descriptionBtnText}>{"Remover descrição"}</Text>
             </TouchableOpacity>
             :
-            <TouchableOpacity style={styles.descriptionBtn} onPress={() => Alert.prompt('Descrição', 'Insira a descrição do gasto', text => setDescription(text))} activeOpacity={.7}>
+            // <TouchableOpacity style={styles.descriptionBtn} onPress={() => Alert.prompt('Descrição', 'Insira a descrição do gasto', text => setDescription(text))} activeOpacity={.7}>
+            <TouchableOpacity style={styles.descriptionBtn} onPress={() => setOpenDescription(true)} activeOpacity={.7}>
               <Text style={styles.descriptionBtnText}>{"Add descrição"}</Text>
             </TouchableOpacity>
         }
       </View>
-      <NumPad onType={number => maskAmount(amount + number)} onBackspace={() => {setAmount('0.00')}} onSend={handleAddExpense} />
+      <NumPad onType={number => maskAmount(amount + number)} onBackspace={() => { setAmount('0.00') }} onSend={handleAddExpense} />
       <DropdownAlert ref={alert} closeInterval={800} successImageSrc={require('../assets/images/check-mark.png')} />
+      <Modal visible={openDescription} transparent onRequestClose={() => setOpenDescription(false)}>
+        <View style={styles.descriptionModalOverlay}>
+          <View style={styles.descriptionModal}>
+            <Text style={styles.modalTitle}>Digite a descrição do gasto:</Text> 
+            <TextInput style={styles.descriptionInput} onChangeText={text => setDescriptionModal(text)} />
+            <TouchableOpacity style={styles.descriptionBtnModal} onPress={handleModalConfirm} activeOpacity={.7}>
+              <Text style={styles.descriptionBtnModalText}>{"OK"}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 
@@ -112,6 +131,48 @@ export default function NewExpenseScreen() {
         marginBottom: 10,
         marginHorizontal: 30,
         textAlign: 'center'
+      },
+      descriptionModalOverlay: {
+        backgroundColor: 'rgba(0, 0, 0, 0.4)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+        flex: 1
+      },
+      descriptionModal: {
+        backgroundColor: Colors[colorScheme].background,
+        padding: 20,
+        borderRadius: 10,
+        marginBottom: 15
+      },
+      modalTitle:{
+        color: Colors[colorScheme].text,
+        fontSize: 16,
+        textAlign: 'center',
+        marginBottom: 15
+      },
+      descriptionInput: {
+        color: Colors[colorScheme].text,
+        fontSize: 16,
+        padding: 5,
+        borderWidth: 1,
+        borderColor: Colors[colorScheme].muted,
+        borderRadius: 7,
+        paddingVertical: 10,
+        paddingHorizontal: 10,
+        marginBottom: 10
+      },
+      descriptionBtnModal: {
+        backgroundColor: Colors[colorScheme].tint,
+        paddingHorizontal: 15,
+        paddingVertical: 10,
+        borderRadius: 5
+      },
+      descriptionBtnModalText: {
+        textAlign: 'center',
+        color: Colors[colorScheme].background,
+        fontSize: 16,
+        fontWeight: 'bold'
       }
     });
   }
